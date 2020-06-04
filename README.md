@@ -14,7 +14,7 @@ This image runs mysqldump to backup data using cronjob to folder `/backup`
 
 Moreover, if you link `pedropilla/mysql-backup` to a mysql container(e.g. `pedropilla/mysql`) with an alias named mysql, this image will try to auto load the `host`, `port`, `user`, `pass` if possible.
 
-    docker run -d -p 27017:27017 -p 28017:28017 -e MYSQL_PASS="mypass" --name mysql pedropilla/mysql
+    docker run -d -p 27017:27017 -p 28017:28017 -e MYSQL_PASS="mypass" --name mysql mysql
     docker run -d --link mysql:mysql -v host.folder:/backup pedropilla/mysql-backup
 
 ## Parameters
@@ -34,8 +34,8 @@ Moreover, if you link `pedropilla/mysql-backup` to a mysql container(e.g. `pedro
 
 See the list of backups, you can run:
 
-    docker exec pedropilla-backup ls /backup
+    docker exec mysql-backup ls /backup
 
 To restore database from a certain backup, simply run:
 
-    docker exec pedropilla-backup /restore.sh /backup/2015.08.06.171901
+    docker exec mysql-backup /restore.sh /backup/2015.08.06.171901
