@@ -6,7 +6,7 @@ This image runs mysqldump to backup data using cronjob to folder `/backup`
 
 docker network create testmysqlbackupnetwork
 
-docker run -d --rm--network testmysqlbackupnetwork -e MYSQL_ROOT_PASSWORD="qwerty12345" --name mysql pedropilla/mysql-dummydb
+docker run -d --rm --network testmysqlbackupnetwork -e MYSQL_ROOT_PASSWORD="qwerty12345" --name mysql pedropilla/mysql-dummydb
 
 docker run -d --rm --network testmysqlbackupnetwork -e MYSQL_HOST=mysql -e MYSQL_USER=root -e MYSQL_PASS=qwerty12345 -e CRON_TIME='*/1 * * * *' -v $(pwd):/backup --name mysqlbackup pedropilla/mysql-backup
 
