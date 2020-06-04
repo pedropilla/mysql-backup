@@ -1,19 +1,13 @@
 #!/bin/sh
 
-if [ "${MYSQL_ENV_MYSQL_PASS}" == "**Random**" ]; then
-        unset MYSQL_ENV_MYSQL_PASS
-fi
-
-MYSQL_HOST=${MYSQL_PORT_3306_TCP_ADDR:-${MYSQL_HOST}}
-MYSQL_HOST=${MYSQL_PORT_1_3306_TCP_ADDR:-${MYSQL_HOST}}
-MYSQL_PORT=${MYSQL_PORT_3306_TCP_PORT:-${MYSQL_PORT}}
-MYSQL_PORT=${MYSQL_PORT_1_3306_TCP_PORT:-${MYSQL_PORT}}
-MYSQL_USER=${MYSQL_USER:-${MYSQL_ENV_MYSQL_USER}}
-MYSQL_PASS=${MYSQL_PASS:-${MYSQL_ENV_MYSQL_PASS}}
+MYSQL_HOST=${MYSQL_HOST}
+MYSQL_PORT=${MYSQL_PORT}
+MYSQL_USER=${MYSQL_USER}
+MYSQL_PASS=${MYSQL_PASS}
 
 [ -z "${MYSQL_HOST}" ] && { echo "=> MYSQL_HOST cannot be empty" && exit 1; }
-[ -z "${MYSQL_PORT}" ] && { echo "=> MYSQL_PORT cannot be empty" && exit 1; }
-[ -z "${MYSQL_USER}" ] && { echo "=> MYSQL_USER cannot be empty" && exit 1; }
+[ -z "${MYSQL_PORT}" ] && MYSQL_PORT=3306;
+[ -z "${MYSQL_USER}" ] && MYSQL_USER=root;
 [ -z "${MYSQL_PASS}" ] && { echo "=> MYSQL_PASS cannot be empty" && exit 1; }
 
 BACKUP_CMD="mysqldump -h${MYSQL_HOST} -P${MYSQL_PORT} -u${MYSQL_USER} -p${MYSQL_PASS} ${EXTRA_OPTS} ${MYSQL_DB} > /backup/"'${BACKUP_NAME}'

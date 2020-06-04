@@ -2,26 +2,19 @@
 
 This image runs mysqldump to backup data using cronjob to folder `/backup`
 
-## Usage:
+## Example:
 
-    docker run -d \
-        --env MYSQL_HOST=mysql.host \
-        --env MYSQL_PORT=27017 \
-        --env MYSQL_USER=admin \
-        --env MYSQL_PASS=password \
-        --volume host.folder:/backup
-        pedropilla/mysql-backup
+docker network create testmysqlbackupnetwork
 
-Moreover, if you link `pedropilla/mysql-backup` to a mysql container(e.g. `pedropilla/mysql`) with an alias named mysql, this image will try to auto load the `host`, `port`, `user`, `pass` if possible.
+docker run -d --rm--network testmysqlbackupnetwork -e MYSQL_ROOT_PASSWORD="qwerty12345" --name mysql pedropilla/mysql-dummydb
 
-    docker run -d -p 27017:27017 -p 28017:28017 -e MYSQL_PASS="mypass" --name mysql mysql
-    docker run -d --link mysql:mysql -v host.folder:/backup pedropilla/mysql-backup
+docker run -d --rm --network testmysqlbackupnetwork -e MYSQL_HOST=mysql -e MYSQL_USER=root -e MYSQL_PASS=qwerty12345 -e CRON_TIME='*/1 * * * *' -v $(pwd):/backup --name mysqlbackup pedropilla/mysql-backup
 
 ## Parameters
 
     MYSQL_HOST      the host/ip of your mysql database
-    MYSQL_PORT      the port number of your mysql database
-    MYSQL_USER      the username of your mysql database
+    MYSQL_PORT      the port number of your mysql database. Default: 3306
+    MYSQL_USER      the username of your mysql database. Default: root
     MYSQL_PASS      the password of your mysql database
     MYSQL_DB        the database name to dump. Default: `--all-databases`
     EXTRA_OPTS      the extra options to pass to mysqldump command
@@ -34,8 +27,8 @@ Moreover, if you link `pedropilla/mysql-backup` to a mysql container(e.g. `pedro
 
 See the list of backups, you can run:
 
-    docker exec mysql-backup ls /backup
+    docker exec mysqlbackup ls /backup
 
 To restore database from a certain backup, simply run:
 
-    docker exec mysql-backup /restore.sh /backup/2015.08.06.171901
+    docker exec mysqlbackup /restore.sh /backup/2020.06.04.010000.sql
